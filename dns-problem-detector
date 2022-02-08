@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+server=$1
+type=$2
+what=$3
+expected=$4
+
+while true; do
+  if dig @$server +time=1 +tries=1 -t $type $what | tee /dev/stderr | grep $expected; then
+    echo
+    echo "$(date) ok"
+  else
+    echo
+    echo "^-- problem"
+    exit 1
+  fi
+done
